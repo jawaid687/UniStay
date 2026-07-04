@@ -1,14 +1,15 @@
-/* ===============================
-   DIU Hostel Management Theme
+/* =========================================================
+   UniStay Global Theme
    Clean Light + Dark Mode
-================================ */
+   Safe for all pages
+========================================================= */
 
-/* ---------- LIGHT MODE ---------- */
+/* ---------- LIGHT MODE VARIABLES ---------- */
 :root {
     --bg-color: #f4f8f7;
     --card-color: #ffffff;
     --text-color: #1f2937;
-    --muted-text: #555;
+    --muted-text: #555555;
     --heading-color: #004d40;
 
     --primary-color: #00897b;
@@ -16,6 +17,7 @@
 
     --border-color: #d9eeee;
     --table-header: #f1f8f7;
+
     --info-box-bg: #e0f2f1;
     --info-box-text: #004d40;
 
@@ -25,7 +27,7 @@
     --shadow-color: rgba(0, 0, 0, 0.08);
 }
 
-/* ---------- DARK MODE ---------- */
+/* ---------- DARK MODE VARIABLES ---------- */
 body.dark-mode {
     --bg-color: #0b1120;
     --card-color: #111827;
@@ -38,6 +40,7 @@ body.dark-mode {
 
     --border-color: #334155;
     --table-header: #1e293b;
+
     --info-box-bg: #134e4a;
     --info-box-text: #ffffff;
 
@@ -47,32 +50,16 @@ body.dark-mode {
     --shadow-color: rgba(0, 0, 0, 0.45);
 }
 
-/* ---------- GLOBAL ---------- */
+/* =========================================================
+   GLOBAL PAGE STYLE
+========================================================= */
+
 body {
     background: var(--bg-color) !important;
     color: var(--text-color) !important;
     transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* ---------- MAIN CONTAINER ---------- */
-.dashboard-container,
-.container {
-    background: var(--card-color) !important;
-    color: var(--text-color) !important;
-    box-shadow: 0 8px 24px var(--shadow-color) !important;
-    border: 1px solid var(--border-color) !important;
-}
-
-/* ---------- HEADER ---------- */
-.header {
-    border-bottom-color: var(--primary-color) !important;
-}
-
-.header h1 {
-    color: var(--heading-color) !important;
-}
-
-/* ---------- TEXT ---------- */
 h1,
 h2,
 h3 {
@@ -81,78 +68,266 @@ h3 {
 
 p,
 td,
-label {
+label,
+span,
+small {
     color: var(--text-color) !important;
 }
 
+a {
+    transition: all 0.3s ease;
+}
+
+/* =========================================================
+   MAIN CONTAINERS
+========================================================= */
+
+.container,
+.dashboard-container,
+.auth-container,
+.form-card,
+.module-card,
+.feature-card,
+.about-section,
+.portal-card,
+.detail-card,
+.profile-card,
+.application-card,
+.table-card {
+    background: var(--card-color) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color) !important;
+    box-shadow: 0 8px 24px var(--shadow-color) !important;
+}
+
+/* Card headings */
+.container h1,
+.container h2,
+.container h3,
+.dashboard-container h1,
+.dashboard-container h2,
+.dashboard-container h3,
+.auth-container h1,
+.auth-container h2,
+.auth-container h3,
+.form-card h1,
+.form-card h2,
+.form-card h3,
+.module-card h1,
+.module-card h2,
+.module-card h3,
+.feature-card h1,
+.feature-card h2,
+.feature-card h3,
+.about-section h1,
+.about-section h2,
+.about-section h3,
+.portal-card h1,
+.portal-card h2,
+.portal-card h3 {
+    color: var(--heading-color) !important;
+}
+
+/* Card text */
+.container p,
+.dashboard-container p,
+.auth-container p,
+.form-card p,
 .module-card p,
-.feature-card p {
+.feature-card p,
+.about-section p,
+.portal-card p,
+.detail-card p,
+.profile-card p,
+.application-card p {
     color: var(--muted-text) !important;
 }
 
-/* ---------- INFO / WELCOME BOX ---------- */
-.welcome-box,
-.info-box {
+/* Labels should be strong/readable */
+.form-group label,
+.form-card label,
+.auth-container label,
+.container label,
+.dashboard-container label {
+    color: var(--text-color) !important;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header {
+    border-bottom-color: var(--primary-color) !important;
+}
+
+.header h1 {
+    color: var(--heading-color) !important;
+}
+
+/* =========================================================
+   INFO / WELCOME / WARNING BOXES
+========================================================= */
+
+.info-box,
+.welcome-box {
     background: var(--info-box-bg) !important;
     color: var(--info-box-text) !important;
     border-left: 5px solid var(--primary-color) !important;
 }
 
-.welcome-box h2,
-.welcome-box p,
-.info-box strong,
-.info-box p {
+.info-box *,
+.welcome-box * {
     color: var(--info-box-text) !important;
 }
 
-body.dark-mode .welcome-box,
-body.dark-mode .info-box {
+body.dark-mode .info-box,
+body.dark-mode .welcome-box {
     background: linear-gradient(135deg, #134e4a, #0f766e) !important;
     border-left: none !important;
 }
 
-/* ---------- WARNING / NOTE BOX ---------- */
 .note-box,
 .warning-box {
     background: var(--warning-bg) !important;
     color: var(--warning-text) !important;
-    border-left-color: #f59e0b !important;
+    border-left: 5px solid #f59e0b !important;
 }
 
-.note-box strong,
-.warning-box strong {
+.note-box *,
+.warning-box * {
     color: var(--warning-text) !important;
 }
 
-/* ---------- CARDS ---------- */
-.module-card,
-.feature-card,
-.about-section {
+/* =========================================================
+   STATUS BOXES
+   Important: no bad inherit override
+========================================================= */
+
+.status-box {
+    padding: 18px !important;
+    border-radius: 8px !important;
+    margin-bottom: 25px !important;
+    line-height: 1.7 !important;
+}
+
+.status-box * {
+    color: inherit !important;
+}
+
+.status-pending {
+    background: #fff8e1 !important;
+    color: #664d03 !important;
+    border-left: 5px solid #f59e0b !important;
+}
+
+.status-waiting {
+    background: #e0f2fe !important;
+    color: #075985 !important;
+    border-left: 5px solid #0284c7 !important;
+}
+
+.status-assigned {
+    background: #d4edda !important;
+    color: #155724 !important;
+    border-left: 5px solid #28a745 !important;
+}
+
+.status-rejected {
+    background: #f8d7da !important;
+    color: #721c24 !important;
+    border-left: 5px solid #dc3545 !important;
+}
+
+/* =========================================================
+   FORMS
+========================================================= */
+
+.form-grid {
+    background: transparent !important;
+}
+
+input,
+select,
+textarea,
+.form-group input,
+.form-group select,
+.form-group textarea,
+.form-card input,
+.form-card select,
+.form-card textarea,
+.auth-container input,
+.auth-container select,
+.auth-container textarea,
+.container input,
+.container select,
+.container textarea,
+.dashboard-container input,
+.dashboard-container select,
+.dashboard-container textarea {
+    background: #ffffff !important;
+    color: #1f2937 !important;
+    border: 1px solid #cbd5e1 !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #64748b !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--primary-color) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(0, 137, 123, 0.15) !important;
+}
+
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea,
+body.dark-mode .form-group input,
+body.dark-mode .form-group select,
+body.dark-mode .form-group textarea,
+body.dark-mode .form-card input,
+body.dark-mode .form-card select,
+body.dark-mode .form-card textarea,
+body.dark-mode .auth-container input,
+body.dark-mode .auth-container select,
+body.dark-mode .auth-container textarea,
+body.dark-mode .container input,
+body.dark-mode .container select,
+body.dark-mode .container textarea,
+body.dark-mode .dashboard-container input,
+body.dark-mode .dashboard-container select,
+body.dark-mode .dashboard-container textarea {
+    background: #1e293b !important;
+    color: #e5e7eb !important;
+    border: 1px solid #334155 !important;
+}
+
+body.dark-mode input::placeholder,
+body.dark-mode textarea::placeholder {
+    color: #94a3b8 !important;
+}
+
+/* =========================================================
+   TABLES
+========================================================= */
+
+table,
+.detail-table {
     background: var(--card-color) !important;
     color: var(--text-color) !important;
-    border: 1px solid var(--border-color) !important;
-    border-top: 5px solid var(--primary-color) !important;
-    box-shadow: 0 6px 18px var(--shadow-color) !important;
 }
 
-.module-card:hover,
-.feature-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 28px var(--shadow-color) !important;
-}
-
-/* ---------- TABLE ---------- */
-table {
-    background: var(--card-color) !important;
-    color: var(--text-color) !important;
-}
-
-th {
+th,
+.detail-table th {
     background: var(--table-header) !important;
     color: var(--heading-color) !important;
 }
 
-td {
+td,
+.detail-table td {
     color: var(--text-color) !important;
     border-bottom-color: var(--border-color) !important;
 }
@@ -165,9 +340,22 @@ body.dark-mode tr:hover {
     background: rgba(20, 184, 166, 0.12) !important;
 }
 
-/* ---------- BUTTONS ---------- */
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.btn,
+button {
+    transition: all 0.3s ease;
+}
+
 .btn-super,
 .btn-admin-panel,
+.btn-dashboard,
+.btn-submit,
+.btn-add,
+.btn-update,
+.btn-approve,
 .module-card a {
     background: var(--primary-color) !important;
     color: white !important;
@@ -175,8 +363,14 @@ body.dark-mode tr:hover {
 
 .btn-super:hover,
 .btn-admin-panel:hover,
+.btn-dashboard:hover,
+.btn-submit:hover,
+.btn-add:hover,
+.btn-update:hover,
+.btn-approve:hover,
 .module-card a:hover {
     background: var(--primary-hover) !important;
+    color: white !important;
 }
 
 .btn-home {
@@ -186,107 +380,151 @@ body.dark-mode tr:hover {
 
 .btn-home:hover {
     background: #475569 !important;
+    color: white !important;
 }
 
-.btn-logout {
+.btn-logout,
+.btn-delete {
     background: #dc2626 !important;
     color: white !important;
 }
 
-.btn-logout:hover {
+.btn-logout:hover,
+.btn-delete:hover {
     background: #b91c1c !important;
-}
-
-/* ---------- BADGES ---------- */
-.role-badge {
-    background: var(--primary-color) !important;
     color: white !important;
 }
 
-/* ---------- THEME TOGGLE ---------- */
-.theme-toggle {
-    background: var(--card-color) !important;
-    color: var(--text-color) !important;
-    border: 1px solid var(--border-color) !important;
-    padding: 9px 16px !important;
-    border-radius: 30px !important;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 14px;
-    box-shadow: 0 3px 10px var(--shadow-color);
-    transition: all 0.3s ease;
-}
-
-.theme-toggle:hover {
-    background: var(--primary-color) !important;
+.btn-recycle {
+    background: #f59e0b !important;
     color: white !important;
-    transform: translateY(-2px);
 }
 
-/* ---------- FLOATING THEME BUTTON POSITION ---------- */
-.theme-toggle-floating {
-    position: fixed !important;
-    top: 18px !important;
-    right: 18px !important;
-    left: auto !important;
-    z-index: 99999 !important;
+.btn-recycle:hover {
+    background: #d97706 !important;
+    color: white !important;
 }
 
-/* ---------- FORM ELEMENTS ---------- */
-input,
-select,
-textarea {
-    background: #ffffff !important;
-    color: #1f2937 !important;
-    border: 1px solid #cbd5e1 !important;
+.btn-restore {
+    background: #28a745 !important;
+    color: white !important;
 }
 
-input::placeholder,
-textarea::placeholder {
-    color: #64748b !important;
+.btn-restore:hover {
+    background: #218838 !important;
+    color: white !important;
 }
 
-body.dark-mode input,
-body.dark-mode select,
-body.dark-mode textarea {
-    background: #1e293b !important;
-    color: #e5e7eb !important;
-    border: 1px solid #334155 !important;
+.btn-transfer {
+    background: #6f42c1 !important;
+    color: white !important;
 }
 
-body.dark-mode input::placeholder,
-body.dark-mode textarea::placeholder {
-    color: #94a3b8 !important;
+.btn-transfer:hover {
+    background: #5a32a3 !important;
+    color: white !important;
 }
 
-/* ---------- DARK MODE CARD IMPROVEMENT ---------- */
-body.dark-mode .dashboard-container,
-body.dark-mode .container,
-body.dark-mode .module-card,
-body.dark-mode .feature-card,
-body.dark-mode .about-section {
-    background: #111827 !important;
+.btn-students {
+    background: #007bff !important;
+    color: white !important;
 }
 
-body.dark-mode .module-card:hover,
-body.dark-mode .feature-card:hover {
-    background: #172033 !important;
+.btn-students:hover {
+    background: #0056b3 !important;
+    color: white !important;
 }
 
-/* ===============================
-   AUTH PAGES FIX
-   login.php / register.php / forgot-password.php
-================================ */
+/* =========================================================
+   BADGES
+========================================================= */
+
+.badge,
+.role-badge,
+.badge-active,
+.badge-approved,
+.badge-pending,
+.badge-unverified,
+.badge-super,
+.badge-admin,
+.badge-staff,
+.badge-student,
+.badge-waiting,
+.badge-assigned,
+.badge-rejected {
+    color: white !important;
+}
+
+.role-badge,
+.badge-active,
+.badge-approved {
+    background: var(--primary-color) !important;
+}
+
+.badge-super {
+    background: #6f42c1 !important;
+}
+
+.badge-admin {
+    background: #007bff !important;
+}
+
+.badge-staff {
+    background: #17a2b8 !important;
+}
+
+.badge-student {
+    background: #6c757d !important;
+}
+
+.badge-pending {
+    background: #f59e0b !important;
+    color: #000000 !important;
+}
+
+.badge-unverified,
+.badge-rejected {
+    background: #dc3545 !important;
+}
+
+.badge-waiting {
+    background: #0284c7 !important;
+}
+
+.badge-assigned {
+    background: #28a745 !important;
+}
+
+/* =========================================================
+   ALERTS
+========================================================= */
+
+.alert-success {
+    background: #d4edda !important;
+    color: #155724 !important;
+    border-left: 5px solid #28a745 !important;
+}
+
+.alert-success * {
+    color: #155724 !important;
+}
+
+.alert-error {
+    background: #f8d7da !important;
+    color: #721c24 !important;
+    border-left: 5px solid #dc3545 !important;
+}
+
+.alert-error * {
+    color: #721c24 !important;
+}
+
+/* =========================================================
+   AUTH PAGES
+========================================================= */
 
 .auth-page {
     background: var(--bg-color) !important;
-}
-
-.auth-container {
-    background: var(--card-color) !important;
-    color: var(--text-color) !important;
-    border: 1px solid var(--border-color) !important;
-    box-shadow: 0 10px 30px var(--shadow-color) !important;
 }
 
 .auth-logo h1,
@@ -299,41 +537,6 @@ body.dark-mode .feature-card:hover {
     color: var(--muted-text) !important;
 }
 
-.form-group label {
-    color: var(--text-color) !important;
-}
-
-.form-group input,
-.form-group select {
-    background: #ffffff !important;
-    color: #1f2937 !important;
-    border: 1px solid #cbd5e1 !important;
-}
-
-.form-group input::placeholder {
-    color: #64748b !important;
-}
-
-body.dark-mode .form-group input,
-body.dark-mode .form-group select {
-    background: #1e293b !important;
-    color: #e5e7eb !important;
-    border: 1px solid #334155 !important;
-}
-
-body.dark-mode .form-group input::placeholder {
-    color: #94a3b8 !important;
-}
-
-body.dark-mode .auth-container {
-    background: #111827 !important;
-}
-
-body.dark-mode .auth-logo p,
-body.dark-mode .auth-links p {
-    color: #cbd5e1 !important;
-}
-
 .auth-links a,
 .forgot-link {
     color: var(--primary-color) !important;
@@ -344,57 +547,60 @@ body.dark-mode .auth-links p {
     color: var(--primary-hover) !important;
 }
 
-.site-footer {
-    color: var(--muted-text) !important;
-}
+/* =========================================================
+   INDEX PAGE HERO FIX
+========================================================= */
 
-/* ===============================
-   INDEX PAGE FIX
-   index.php hero + footer
-================================ */
-
-body .hero {
+.hero {
     color: white !important;
 }
 
-body .hero h1,
-body .hero p {
+.hero h1,
+.hero p {
     color: white !important;
 }
 
-body .hero .btn-primary {
+.hero .btn-primary {
     background: white !important;
     color: #00796b !important;
 }
 
-body .hero .btn-primary:hover {
+.hero .btn-primary:hover {
     background: #f1fdfb !important;
     color: #00796b !important;
 }
 
-body .hero .btn-secondary {
+.hero .btn-secondary {
     background: transparent !important;
     color: white !important;
     border: 2px solid white !important;
 }
 
-body .hero .btn-secondary:hover {
+.hero .btn-secondary:hover {
     background: white !important;
     color: #00796b !important;
 }
 
-/* Footer fix only for index.php */
-body .hero ~ .site-footer {
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.site-footer {
+    color: var(--muted-text) !important;
+}
+
+.site-footer p {
+    color: var(--muted-text) !important;
+}
+
+.hero ~ .site-footer {
     background: #004d40 !important;
     color: white !important;
 }
 
-body .hero ~ .site-footer p {
+.hero ~ .site-footer p,
+.hero ~ .site-footer strong {
     color: white !important;
-}
-
-body .hero ~ .site-footer strong {
-    color: #e0f2f1 !important;
 }
 
 body.dark-mode .hero ~ .site-footer {
@@ -402,6 +608,37 @@ body.dark-mode .hero ~ .site-footer {
     color: #e5e7eb !important;
 }
 
-body.dark-mode .hero ~ .site-footer p {
+body.dark-mode .hero ~ .site-footer p,
+body.dark-mode .hero ~ .site-footer strong {
     color: #e5e7eb !important;
+}
+
+/* =========================================================
+   THEME TOGGLE
+========================================================= */
+
+.theme-toggle {
+    background: var(--card-color) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color) !important;
+    padding: 9px 16px !important;
+    border-radius: 30px !important;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    box-shadow: 0 3px 10px var(--shadow-color) !important;
+}
+
+.theme-toggle:hover {
+    background: var(--primary-color) !important;
+    color: white !important;
+    transform: translateY(-2px);
+}
+
+.theme-toggle-floating {
+    position: fixed !important;
+    top: 18px !important;
+    right: 18px !important;
+    left: auto !important;
+    z-index: 99999 !important;
 }

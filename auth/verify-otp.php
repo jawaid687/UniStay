@@ -2,66 +2,88 @@
 session_start();
 require_once '../includes/db.php';
 
-// Catch messages passed from resend-otp.php
 $error = isset($_SESSION['error_msg']) ? $_SESSION['error_msg'] : '';
 $success = isset($_SESSION['success_msg']) ? $_SESSION['success_msg'] : '';
 
 unset($_SESSION['error_msg']);
 unset($_SESSION['success_msg']);
 
-// Get email from URL
 $email = isset($_GET['email']) ? trim($_GET['email']) : '';
 
-if (empty($email)) {
+if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
     header("Location: register.php");
     exit();
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $otp_array = isset($_POST['otp']) ? $_POST['otp'] : [];
-    $submitted_otp = mysqli_real_escape_string($conn, trim(implode('', $otp_array)));
-    $email_to_verify = mysqli_real_escape_string($conn, $_POST['email']);
+    $submitted_otp = trim(implode('', $otp_array));
+    $submitted_otp = preg_replace('/[^0-9]/', '', $submitted_otp);
 
-    if (strlen($submitted_otp) < 6) {
+    $email_to_verify = isset($_POST['email']) ? trim($_POST['email']) : '';
+
+    if (empty($email_to_verify) || !filter_var($email_to_verify, FILTER_VALIDATE_EMAIL)) {
+        $error = "Invalid email address.";
+    } elseif (strlen($submitted_otp) !== 6) {
         $error = "Please enter the complete 6-digit OTP.";
     } else {
-        $query = "SELECT * FROM users WHERE email = '$email_to_verify' LIMIT 1";
-        $result = mysqli_query($conn, $query);
+        $stmt = mysqli_prepare(
+            $conn,
+            "SELECT id, email, otp_code, otp_expiry, is_verified 
+             FROM users 
+             WHERE email = ? 
+             LIMIT 1"
+        );
 
-        if ($result && mysqli_num_rows($result) > 0) {
-            $user = mysqli_fetch_assoc($result);
-            $current_time = date("Y-m-d H:i:s");
+        mysqli_stmt_bind_param($stmt, "s", $email_to_verify);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+        $user = mysqli_fetch_assoc($result);
+        mysqli_stmt_close($stmt);
 
-            if ($user['otp_code'] !== $submitted_otp) {
-                $error = "Invalid OTP code. Please try again.";
-            } elseif ($user['otp_expiry'] < $current_time) {
-                $error = "This OTP has expired. Please request a new OTP.";
-            } else {
-                $update_query = "UPDATE users 
-                                 SET is_verified = 1, otp_code = NULL, otp_expiry = NULL 
-                                 WHERE email = '$email_to_verify'";
-
-                if (mysqli_query($conn, $update_query)) {
-                    $success = "Account verified successfully! You can now login.";
-                } else {
-                    $error = "Failed to update account status.";
-                }
-            }
-        } else {
+        if (!$user) {
             $error = "User not found.";
+        } elseif ($user['is_verified'] == 1) {
+            $success = "Account already verified. You can login now.";
+        } elseif (empty($user['otp_code']) || $user['otp_code'] !== $submitted_otp) {
+            $error = "Invalid OTP code. Please try again.";
+        } elseif (empty($user['otp_expiry']) || strtotime($user['otp_expiry']) < time()) {
+            $error = "This OTP has expired. Please request a new OTP.";
+        } else {
+            $update_stmt = mysqli_prepare(
+                $conn,
+                "UPDATE users 
+                 SET is_verified = 1, otp_code = NULL, otp_expiry = NULL 
+                 WHERE email = ?"
+            );
+
+            mysqli_stmt_bind_param($update_stmt, "s", $email_to_verify);
+
+            if (mysqli_stmt_execute($update_stmt)) {
+                $success = "Account verified successfully! You can now login.";
+            } else {
+                $error = "Failed to update account status.";
+            }
+
+            mysqli_stmt_close($update_stmt);
         }
     }
 }
 
-$is_verified_success = ($success === "Account verified successfully! You can now login.");
+$is_verified_success = (
+    $success === "Account verified successfully! You can now login." ||
+    $success === "Account already verified. You can login now."
+);
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Verify OTP - DIU Hostel Management System</title>
+    <title>Verify OTP - UniStay</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/UniStay/assets/css/theme.css">
 
     <style>
         * {
@@ -113,7 +135,7 @@ $is_verified_success = ($success === "Account verified successfully! You can now
         .auth-container h1 {
             margin: 0;
             color: #004d40;
-            font-size: 25px;
+            font-size: 28px;
             font-weight: 800;
         }
 
@@ -264,7 +286,7 @@ $is_verified_success = ($success === "Account verified successfully! You can now
             }
 
             .auth-container h1 {
-                font-size: 21px;
+                font-size: 24px;
             }
         }
     </style>
@@ -272,12 +294,14 @@ $is_verified_success = ($success === "Account verified successfully! You can now
 
 <body>
 
+<button id="themeToggle" class="theme-toggle theme-toggle-floating">🌙 Dark Mode</button>
+
 <div class="auth-page">
     <div class="auth-container">
 
         <div class="otp-header-icon">OTP</div>
 
-        <h1>DIU Hostel Management System</h1>
+        <h1>UniStay</h1>
         <h2>Verify Your Email</h2>
 
         <p class="subtitle">
@@ -392,5 +416,6 @@ $is_verified_success = ($success === "Account verified successfully! You can now
     }
 </script>
 
+<script src="/UniStay/assets/js/theme.js"></script>
 </body>
 </html>

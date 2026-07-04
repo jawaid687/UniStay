@@ -331,13 +331,24 @@ td,
     color: var(--text-color) !important;
     border-bottom-color: var(--border-color) !important;
 }
-
+/* Table hover: keep very soft so form rows do not look broken */
 tr:hover {
-    background: rgba(0, 137, 123, 0.07) !important;
+    background: rgba(0, 137, 123, 0.03) !important;
 }
 
 body.dark-mode tr:hover {
-    background: rgba(20, 184, 166, 0.12) !important;
+    background: rgba(20, 184, 166, 0.04) !important;
+}
+
+/* On pages with forms inside tables, do not change row color strongly */
+.review-form tr:hover,
+.table-wrapper tr:hover {
+    background: transparent !important;
+}
+
+body.dark-mode .review-form tr:hover,
+body.dark-mode .table-wrapper tr:hover {
+    background: transparent !important;
 }
 
 /* =========================================================

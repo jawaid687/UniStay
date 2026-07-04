@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 }
 
 // -----------------------------
-// DELETE USER
+// MOVE USER TO SUPER ADMIN RECYCLE BIN
 // Super Admin cannot delete himself
 // Super Admin cannot delete Super Admin account
 // -----------------------------
@@ -79,13 +79,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         } elseif ($user_to_delete['role'] === 'super_admin') {
             $error_msg = "Super Admin account cannot be deleted.";
         } else {
-            $delete_stmt = mysqli_prepare($conn, "DELETE FROM users WHERE id = ? AND id != ? AND role != 'super_admin'");
-            mysqli_stmt_bind_param($delete_stmt, "ii", $user_id, $current_super_admin_id);
+            $delete_stmt = mysqli_prepare(
+                $conn,
+                "UPDATE users 
+                 SET is_deleted = 1, 
+                     deleted_at = NOW(), 
+                     deleted_by = ?, 
+                     deleted_from = 'super_admin_panel'
+                 WHERE id = ? 
+                 AND id != ? 
+                 AND role != 'super_admin'"
+            );
+
+            mysqli_stmt_bind_param(
+                $delete_stmt,
+                "iii",
+                $current_super_admin_id,
+                $user_id,
+                $current_super_admin_id
+            );
 
             if (mysqli_stmt_execute($delete_stmt) && mysqli_stmt_affected_rows($delete_stmt) === 1) {
-                $success_msg = "User deleted successfully.";
+                $success_msg = "User moved to Super Admin Recycle Bin successfully.";
             } else {
-                $error_msg = "Failed to delete user.";
+                $error_msg = "Failed to move user to recycle bin.";
             }
 
             mysqli_stmt_close($delete_stmt);
@@ -163,8 +180,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
-// Fetch all users
-$users_query = "SELECT * FROM users ORDER BY 
+// Fetch only active users
+$users_query = "SELECT * FROM users 
+                WHERE is_deleted = 0
+                ORDER BY 
                 CASE 
                     WHEN role = 'super_admin' THEN 1
                     WHEN role = 'admin' THEN 2
@@ -182,6 +201,7 @@ $institutional_id = isset($_SESSION['institutional_id']) ? $_SESSION['institutio
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Manage Users - DIU Hostel Management System</title>
@@ -201,7 +221,7 @@ $institutional_id = isset($_SESSION['institutional_id']) ? $_SESSION['institutio
             background: white;
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 5px 18px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 18px rgba(0, 0, 0, 0.1);
         }
 
         .header {
@@ -253,6 +273,15 @@ $institutional_id = isset($_SESSION['institutional_id']) ? $_SESSION['institutio
             background-color: #00695c;
         }
 
+        .btn-recycle {
+            background-color: #f59e0b;
+            color: white;
+        }
+
+        .btn-recycle:hover {
+            background-color: #d97706;
+        }
+
         .btn-logout {
             background-color: #dc3545;
             color: white;
@@ -302,7 +331,8 @@ $institutional_id = isset($_SESSION['institutional_id']) ? $_SESSION['institutio
             margin-top: 25px;
         }
 
-        th, td {
+        th,
+        td {
             padding: 12px;
             border-bottom: 1px solid #ddd;
             text-align: left;
@@ -435,167 +465,177 @@ $institutional_id = isset($_SESSION['institutional_id']) ? $_SESSION['institutio
 
 <body>
 
-<button id="themeToggle" class="theme-toggle theme-toggle-floating">🌙 Dark Mode</button>
+    <button id="themeToggle" class="theme-toggle theme-toggle-floating">🌙 Dark Mode</button>
 
-<div class="container">
+    <div class="container">
 
-    <div class="header">
-        <h1>Manage Users</h1>
+        <div class="header">
+            <h1>Manage Users</h1>
 
-        <div class="header-actions">
-            <a href="../index.php" class="btn btn-home">Home</a>
-            <a href="dashboard.php" class="btn btn-dashboard">Super Admin Dashboard</a>
-            <a href="../auth/logout.php" class="btn btn-logout">Logout</a>
+            <div class="header-actions">
+                <a href="../index.php" class="btn btn-home">Home</a>
+                <a href="dashboard.php" class="btn btn-dashboard">Super Admin Dashboard</a>
+                <a href="user-recycle-bin.php" class="btn btn-recycle">User Recycle Bin</a>
+                <a href="../auth/logout.php" class="btn btn-logout">Logout</a>
+            </div>
         </div>
-    </div>
 
-    <div class="info-box">
-        <strong>DIU Hostel Management System</strong><br>
-        Logged in as: <strong><?php echo htmlspecialchars($name); ?></strong>
-        |
-        ID: <strong><?php echo htmlspecialchars($institutional_id); ?></strong>
-    </div>
+        <div class="info-box">
+            <strong>DIU Hostel Management System</strong><br>
+            Logged in as: <strong><?php echo htmlspecialchars($name); ?></strong>
+            |
+            ID: <strong><?php echo htmlspecialchars($institutional_id); ?></strong>
+        </div>
 
-    <div class="warning-box">
-        <strong>Super Admin Rule:</strong>
-        The system must have only one Super Admin. If you transfer power,
-        your role will become Admin and the selected user will become the new Super Admin.
-        After transfer, you will be logged out automatically.
-    </div>
+        <div class="warning-box">
+            <strong>Super Admin Rule:</strong>
+            The system must have only one Super Admin. If you transfer power,
+            your role will become Admin and the selected user will become the new Super Admin.
+            After transfer, you will be logged out automatically.
+        </div>
 
-    <?php if (!empty($success_msg)): ?>
-        <div class="alert-success"><?php echo htmlspecialchars($success_msg); ?></div>
-    <?php endif; ?>
+        <?php if (!empty($success_msg)): ?>
+            <div class="alert-success"><?php echo htmlspecialchars($success_msg); ?></div>
+        <?php endif; ?>
 
-    <?php if (!empty($error_msg)): ?>
-        <div class="alert-error"><?php echo htmlspecialchars($error_msg); ?></div>
-    <?php endif; ?>
+        <?php if (!empty($error_msg)): ?>
+            <div class="alert-error"><?php echo htmlspecialchars($error_msg); ?></div>
+        <?php endif; ?>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Institutional ID</th>
-                <th>Email</th>
-                <th>Current Role</th>
-                <th>Email Status</th>
-                <th>Approval Status</th>
-                <th>Change Role</th>
-                <th>Transfer Power</th>
-                <th>Delete User</th>
-            </tr>
-        </thead>
-
-        <tbody>
-            <?php if ($users_result && mysqli_num_rows($users_result) > 0): ?>
-                <?php while ($row = mysqli_fetch_assoc($users_result)): ?>
-
-                    <?php
-                    $role_class = 'badge-student';
-
-                    if ($row['role'] === 'super_admin') {
-                        $role_class = 'badge-super';
-                    } elseif ($row['role'] === 'admin') {
-                        $role_class = 'badge-admin';
-                    } elseif ($row['role'] === 'staff') {
-                        $role_class = 'badge-staff';
-                    }
-                    ?>
-
-                    <tr>
-                        <td><?php echo htmlspecialchars($row['name']); ?></td>
-
-                        <td><?php echo htmlspecialchars($row['institutional_id'] ?? 'N/A'); ?></td>
-
-                        <td><?php echo htmlspecialchars($row['email']); ?></td>
-
-                        <td>
-                            <span class="badge <?php echo $role_class; ?>">
-                                <?php echo strtoupper(htmlspecialchars($row['role'])); ?>
-                            </span>
-                        </td>
-
-                        <td>
-                            <?php if ($row['is_verified'] == 1): ?>
-                                <span class="badge badge-approved">Verified</span>
-                            <?php else: ?>
-                                <span class="badge badge-unverified">Unverified</span>
-                            <?php endif; ?>
-                        </td>
-
-                        <td>
-                            <?php if ($row['is_approved'] == 1): ?>
-                                <span class="badge badge-approved">Approved</span>
-                            <?php else: ?>
-                                <span class="badge badge-pending">Pending</span>
-
-                                <?php if ($row['is_verified'] == 1): ?>
-                                    <form method="POST" class="action-group" style="margin-top: 8px;">
-                                        <input type="hidden" name="action" value="approve">
-                                        <input type="hidden" name="user_id" value="<?php echo intval($row['id']); ?>">
-                                        <button type="submit" class="btn btn-approve">Approve</button>
-                                    </form>
-                                <?php endif; ?>
-                            <?php endif; ?>
-                        </td>
-
-                        <td>
-                            <?php if ($row['role'] !== 'super_admin'): ?>
-                                <form method="POST" class="action-group">
-                                    <input type="hidden" name="action" value="change_role">
-                                    <input type="hidden" name="user_id" value="<?php echo intval($row['id']); ?>">
-
-                                    <select name="new_role" required>
-                                        <option value="student" <?php if ($row['role'] === 'student') echo 'selected'; ?>>Student</option>
-                                        <option value="staff" <?php if ($row['role'] === 'staff') echo 'selected'; ?>>Staff</option>
-                                        <option value="admin" <?php if ($row['role'] === 'admin') echo 'selected'; ?>>Admin</option>
-                                    </select>
-
-                                    <button type="submit" class="btn btn-update">Update</button>
-                                </form>
-                            <?php else: ?>
-                                <span class="disabled-text">Root authority</span>
-                            <?php endif; ?>
-                        </td>
-
-                        <td>
-                            <?php if ($row['id'] != $current_super_admin_id && $row['is_verified'] == 1 && $row['is_approved'] == 1): ?>
-                                <form method="POST" onsubmit="return confirm('Are you sure? You will lose Super Admin authority and be logged out.');">
-                                    <input type="hidden" name="action" value="transfer_power">
-                                    <input type="hidden" name="new_super_admin_id" value="<?php echo intval($row['id']); ?>">
-                                    <button type="submit" class="btn btn-transfer">Transfer Power</button>
-                                </form>
-                            <?php elseif ($row['id'] == $current_super_admin_id): ?>
-                                <span class="disabled-text">Current Super Admin</span>
-                            <?php else: ?>
-                                <span class="disabled-text">Must be verified & approved</span>
-                            <?php endif; ?>
-                        </td>
-
-                        <td>
-                            <?php if ($row['id'] != $current_super_admin_id && $row['role'] !== 'super_admin'): ?>
-                                <form method="POST" onsubmit="return confirm('Are you sure you want to permanently delete this user? This action cannot be undone.');">
-                                    <input type="hidden" name="action" value="delete_user">
-                                    <input type="hidden" name="user_id" value="<?php echo intval($row['id']); ?>">
-                                    <button type="submit" class="btn btn-delete">Delete</button>
-                                </form>
-                            <?php else: ?>
-                                <span class="disabled-text">Protected</span>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-
-                <?php endwhile; ?>
-            <?php else: ?>
+        <table>
+            <thead>
                 <tr>
-                    <td colspan="9" style="text-align:center;">No users found.</td>
+                    <th>Name</th>
+                    <th>Institutional ID</th>
+                    <th>Email</th>
+                    <th>Current Role</th>
+                    <th>Email Status</th>
+                    <th>Approval Status</th>
+                    <th>Change Role</th>
+                    <th>Transfer Power</th>
+                    <th>Delete User</th>
                 </tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
+            </thead>
 
-</div>
+            <tbody>
+                <?php if ($users_result && mysqli_num_rows($users_result) > 0): ?>
+                    <?php while ($row = mysqli_fetch_assoc($users_result)): ?>
 
-<script src="/UniStay/assets/js/theme.js"></script>
+                        <?php
+                        $role_class = 'badge-student';
+
+                        if ($row['role'] === 'super_admin') {
+                            $role_class = 'badge-super';
+                        } elseif ($row['role'] === 'admin') {
+                            $role_class = 'badge-admin';
+                        } elseif ($row['role'] === 'staff') {
+                            $role_class = 'badge-staff';
+                        }
+                        ?>
+
+                        <tr>
+                            <td><?php echo htmlspecialchars($row['name']); ?></td>
+
+                            <td><?php echo htmlspecialchars($row['institutional_id'] ?? 'N/A'); ?></td>
+
+                            <td><?php echo htmlspecialchars($row['email']); ?></td>
+
+                            <td>
+                                <span class="badge <?php echo $role_class; ?>">
+                                    <?php echo strtoupper(htmlspecialchars($row['role'])); ?>
+                                </span>
+                            </td>
+
+                            <td>
+                                <?php if ($row['is_verified'] == 1): ?>
+                                    <span class="badge badge-approved">Verified</span>
+                                <?php else: ?>
+                                    <span class="badge badge-unverified">Unverified</span>
+                                <?php endif; ?>
+                            </td>
+
+                            <td>
+                                <?php if ($row['is_approved'] == 1): ?>
+                                    <span class="badge badge-approved">Approved</span>
+                                <?php else: ?>
+                                    <span class="badge badge-pending">Pending</span>
+
+                                    <?php if ($row['is_verified'] == 1): ?>
+                                        <form method="POST" class="action-group" style="margin-top: 8px;">
+                                            <input type="hidden" name="action" value="approve">
+                                            <input type="hidden" name="user_id" value="<?php echo intval($row['id']); ?>">
+                                            <button type="submit" class="btn btn-approve">Approve</button>
+                                        </form>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                            </td>
+
+                            <td>
+                                <?php if ($row['role'] !== 'super_admin'): ?>
+                                    <form method="POST" class="action-group">
+                                        <input type="hidden" name="action" value="change_role">
+                                        <input type="hidden" name="user_id" value="<?php echo intval($row['id']); ?>">
+
+                                        <select name="new_role" required>
+                                            <option value="student" <?php if ($row['role'] === 'student')
+                                                echo 'selected'; ?>>Student
+                                            </option>
+                                            <option value="staff" <?php if ($row['role'] === 'staff')
+                                                echo 'selected'; ?>>Staff
+                                            </option>
+                                            <option value="admin" <?php if ($row['role'] === 'admin')
+                                                echo 'selected'; ?>>Admin
+                                            </option>
+                                        </select>
+
+                                        <button type="submit" class="btn btn-update">Update</button>
+                                    </form>
+                                <?php else: ?>
+                                    <span class="disabled-text">Root authority</span>
+                                <?php endif; ?>
+                            </td>
+
+                            <td>
+                                <?php if ($row['id'] != $current_super_admin_id && $row['is_verified'] == 1 && $row['is_approved'] == 1): ?>
+                                    <form method="POST"
+                                        onsubmit="return confirm('Are you sure? You will lose Super Admin authority and be logged out.');">
+                                        <input type="hidden" name="action" value="transfer_power">
+                                        <input type="hidden" name="new_super_admin_id" value="<?php echo intval($row['id']); ?>">
+                                        <button type="submit" class="btn btn-transfer">Transfer Power</button>
+                                    </form>
+                                <?php elseif ($row['id'] == $current_super_admin_id): ?>
+                                    <span class="disabled-text">Current Super Admin</span>
+                                <?php else: ?>
+                                    <span class="disabled-text">Must be verified & approved</span>
+                                <?php endif; ?>
+                            </td>
+
+                            <td>
+                                <?php if ($row['id'] != $current_super_admin_id && $row['role'] !== 'super_admin'): ?>
+                                    <form method="POST"
+                                        onsubmit="return confirm('Move this user to Super Admin Recycle Bin? You can restore this user later.');">
+                                        <input type="hidden" name="action" value="delete_user">
+                                        <input type="hidden" name="user_id" value="<?php echo intval($row['id']); ?>">
+                                        <button type="submit" class="btn btn-delete">Delete</button>
+                                    </form>
+                                <?php else: ?>
+                                    <span class="disabled-text">Protected</span>
+                                <?php endif; ?>
+                            </td>
+                        </tr>
+
+                    <?php endwhile; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="9" style="text-align:center;">No users found.</td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+
+    </div>
+
+    <script src="/UniStay/assets/js/theme.js"></script>
 </body>
+
 </html>

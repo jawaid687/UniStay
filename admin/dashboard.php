@@ -15,11 +15,9 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'unknown';
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  
     <meta charset="UTF-8">
-    <title>Admin Dashboard - DIU Hostel Management System</title>
-   
-
+    <title>Admin Dashboard - UniStay</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
         body {
@@ -57,6 +55,7 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'unknown';
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
+            align-items: center;
         }
 
         .btn {
@@ -65,6 +64,9 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'unknown';
             border-radius: 5px;
             font-weight: bold;
             display: inline-block;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
         }
 
         .btn-home {
@@ -83,6 +85,15 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'unknown';
 
         .btn-super:hover {
             background-color: #00695c;
+        }
+
+        .btn-recycle {
+            background-color: #f59e0b;
+            color: white;
+        }
+
+        .btn-recycle:hover {
+            background-color: #d97706;
         }
 
         .btn-logout {
@@ -164,6 +175,14 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'unknown';
             background-color: #00695c;
         }
 
+        .module-card .recycle-link {
+            background-color: #f59e0b;
+        }
+
+        .module-card .recycle-link:hover {
+            background-color: #d97706;
+        }
+
         .note-box {
             margin-top: 30px;
             background: #fff3cd;
@@ -186,33 +205,40 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'unknown';
             }
         }
     </style>
-     <link rel="stylesheet" href="../assets/css/theme.css">
+
+    <link rel="stylesheet" href="../assets/css/theme.css">
 </head>
 
 <body>
+
 <div class="dashboard-container">
 
     <div class="header">
         <h1>Admin Dashboard</h1>
 
         <div class="header-actions">
-    <button id="themeToggle" class="theme-toggle">🌙 Dark Mode</button>
+            <button id="themeToggle" class="theme-toggle">🌙 Dark Mode</button>
 
-    <a href="../index.php" class="btn btn-home">Home</a>
+            <a href="../index.php" class="btn btn-home">Home</a>
 
-    <?php if ($role === 'super_admin'): ?>
-        <a href="../super-admin/dashboard.php" class="btn btn-super">Super Admin Portal</a>
-    <?php endif; ?>
+            <?php if ($role === 'super_admin'): ?>
+                <a href="../super-admin/dashboard.php" class="btn btn-super">Super Admin Portal</a>
+            <?php endif; ?>
 
-    <a href="../auth/logout.php" class="btn btn-logout">Logout</a>
-</div>
+            <a href="recycle-bin.php" class="btn btn-recycle">Admin Recycle Bin</a>
+
+            <a href="../auth/logout.php" class="btn btn-logout">Logout</a>
+        </div>
     </div>
 
     <div class="welcome-box">
         <h2>Welcome, <?php echo htmlspecialchars($name); ?></h2>
+
         <p>
-            ID Number: <strong><?php echo htmlspecialchars($institutional_id); ?></strong>
+            ID Number:
+            <strong><?php echo htmlspecialchars($institutional_id); ?></strong>
         </p>
+
         <p>
             Current Role:
             <span class="role-badge">
@@ -249,10 +275,10 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'unknown';
         <div class="module-card">
             <h3>Student Records</h3>
             <p>
-                View and manage student hostel information, assigned rooms,
-                contact details, and guardian information.
+                View, add, manage, and delete student hostel records.
+                Deleted student records will move to the Admin Recycle Bin.
             </p>
-            <a href="../students/index.php">Manage Students</a>
+            <a href="student-records.php">Manage Students</a>
         </div>
 
         <div class="module-card">
@@ -262,6 +288,15 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'unknown';
                 then assign or update their progress.
             </p>
             <a href="../maintenance/index.php">View Requests</a>
+        </div>
+
+        <div class="module-card">
+            <h3>Admin Recycle Bin</h3>
+            <p>
+                Restore or permanently delete records that were deleted from
+                admin-level modules such as Student Records.
+            </p>
+            <a href="recycle-bin.php" class="recycle-link">Open Recycle Bin</a>
         </div>
 
         <div class="module-card">
@@ -282,9 +317,10 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'unknown';
 
     <div class="note-box">
         <strong>Note:</strong>
-        This admin panel is now accessible by both <strong>Admin</strong> and
-        <strong>Super Admin</strong>. Super Admin keeps the original role but receives
-        permission to control admin-level features.
+        This admin panel is accessible by both <strong>Admin</strong> and
+        <strong>Super Admin</strong>. Student records deleted from the Admin Panel
+        will go to the <strong>Admin Recycle Bin</strong>, where Admin and Super Admin
+        can restore them.
     </div>
 
 </div>

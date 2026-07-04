@@ -430,7 +430,7 @@ $institutional_id = isset($_SESSION['institutional_id']) ? $_SESSION['institutio
         }
     </style>
 
-    <link rel="stylesheet" href="/auth-system/assets/css/theme.css">
+    <link rel="stylesheet" href="/UniStay/assets/css/theme.css">
 </head>
 
 <body>
@@ -596,6 +596,6 @@ $institutional_id = isset($_SESSION['institutional_id']) ? $_SESSION['institutio
 
 </div>
 
-<script src="/auth-system/assets/js/theme.js"></script>
+<script src="/UniStay/assets/js/theme.js"></script>
 </body>
 </html>

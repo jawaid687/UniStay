@@ -388,7 +388,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     </style>
 
-    <link rel="stylesheet" href="/auth-system/assets/css/theme.css">
+    <link rel="stylesheet" href="/UniStay/assets/css/theme.css">
 </head>
 
 <body>
@@ -461,6 +461,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     Project by <strong>Jawaid</strong> | Daffodil International University
 </div>
 
-<script src="/auth-system/assets/js/theme.js"></script>
+<script src="/UniStay/assets/js/theme.js"></script>
 </body>
 </html>

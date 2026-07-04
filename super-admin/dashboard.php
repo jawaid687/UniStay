@@ -239,7 +239,7 @@ $admin_name = isset($_SESSION['name']) ? $_SESSION['name'] : 'Super Admin';
         }
     </style>
 
-    <link rel="stylesheet" href="/auth-system/assets/css/theme.css">
+    <link rel="stylesheet" href="/UniStay/assets/css/theme.css">
 </head>
 
 <body>
@@ -354,7 +354,7 @@ $admin_name = isset($_SESSION['name']) ? $_SESSION['name'] : 'Super Admin';
 
     </div>
 
-    <script src="/auth-system/assets/js/theme.js"></script>
+    <script src="/UniStay/assets/js/theme.js"></script>
 </body>
 
 </html>

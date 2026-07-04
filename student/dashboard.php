@@ -19,7 +19,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'student') {
     /* your page css */
 </style>
 
-<link rel="stylesheet" href="/auth-system/assets/css/theme.css">
+<link rel="stylesheet" href="/UniStay/assets/css/theme.css">
 
 </head>
 </body>

@@ -9,7 +9,7 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Global Theme CSS -->
-    <link rel="stylesheet" href="/auth-system/assets/css/theme.css">
+    <link rel="stylesheet" href="/UniStay/assets/css/theme.css">
 
     <style>
         body {
@@ -309,6 +309,6 @@ session_start();
     </p>
 </footer>
 
-<script src="/auth-system/assets/js/theme.js"></script>
+<script src="/UniStay/assets/js/theme.js"></script>
 </body>
 </html>

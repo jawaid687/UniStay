@@ -20,6 +20,8 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'unknown';
     <title>Admin Dashboard - UniStay</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="stylesheet" href="../assets/css/theme.css">
+
     <style>
         body {
             margin: 0;
@@ -86,6 +88,24 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'unknown';
 
         .btn-super:hover {
             background-color: #00695c;
+        }
+
+        .btn-team {
+            background-color: #2563eb;
+            color: white;
+        }
+
+        .btn-team:hover {
+            background-color: #1d4ed8;
+        }
+
+        .btn-support {
+            background-color: #7c3aed;
+            color: white;
+        }
+
+        .btn-support:hover {
+            background-color: #6d28d9;
         }
 
         .btn-recycle {
@@ -176,6 +196,14 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'unknown';
             background-color: #00695c;
         }
 
+        .module-card .support-link {
+            background-color: #7c3aed;
+        }
+
+        .module-card .support-link:hover {
+            background-color: #6d28d9;
+        }
+
         .module-card .recycle-link {
             background-color: #f59e0b;
         }
@@ -206,8 +234,6 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'unknown';
             }
         }
     </style>
-
-    <link rel="stylesheet" href="../assets/css/theme.css">
 </head>
 
 <body>
@@ -221,6 +247,10 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'unknown';
                 <button id="themeToggle" class="theme-toggle">🌙 Dark Mode</button>
 
                 <a href="../index.php" class="btn btn-home">Home</a>
+
+                <a href="../about.php" class="btn btn-team">Team</a>
+
+                <a href="../support.php" class="btn btn-support">Support Page</a>
 
                 <?php if ($role === 'super_admin'): ?>
                     <a href="../super-admin/dashboard.php" class="btn btn-super">Super Admin Portal</a>
@@ -283,6 +313,15 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'unknown';
             </div>
 
             <div class="module-card">
+                <h3>Support Messages</h3>
+                <p>
+                    View messages submitted from the UniStay Support page.
+                    Admin can read, mark, and delete support messages.
+                </p>
+                <a href="support-messages.php" class="support-link">Open Messages</a>
+            </div>
+
+            <div class="module-card">
                 <h3>Service Requests</h3>
                 <p>
                     Monitor student maintenance complaints and service requests,
@@ -302,7 +341,9 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'unknown';
 
             <div class="module-card">
                 <h3>Manage Users</h3>
-                <p>Approve, disable, update, or delete staff and student users only.</p>
+                <p>
+                    Approve, disable, update, or delete staff and student users only.
+                </p>
                 <a href="manage-users.php">Manage Users</a>
             </div>
 
@@ -313,7 +354,8 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'unknown';
             This admin panel is accessible by both <strong>Admin</strong> and
             <strong>Super Admin</strong>. Student records deleted from the Admin Panel
             will go to the <strong>Admin Recycle Bin</strong>, where Admin and Super Admin
-            can restore them.
+            can restore them. Support messages submitted from the Support page will appear
+            in the <strong>Support Messages</strong> module.
         </div>
 
     </div>

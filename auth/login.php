@@ -156,7 +156,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login - DIU Hostel Management System</title>
+    <title>Login - UniStay Management System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
@@ -399,7 +399,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="auth-container">
 
         <div class="auth-logo">
-            <h1>DIU Hostel Management System</h1>
+            <h1>UniStay Management System</h1>
             <p>Login to access your hostel portal dashboard and services.</p>
         </div>
 

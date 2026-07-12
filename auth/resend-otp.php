@@ -53,7 +53,7 @@ try {
     $mail->SMTPAuth   = true;
 
     // Your Gmail address
-    $mail->Username   = 'jawaidhossain5@gmail.com';
+    $mail->Username   = 'unistayhallportal@gmail.com';
 
     // Put your NEW Gmail App Password here
     $mail->Password   = 'dtahbiwbifvmtugk';
@@ -65,15 +65,15 @@ try {
     $mail->Timeout = 10;
     $mail->SMTPKeepAlive = false;
 
-    $mail->setFrom('jawaidhossain5@gmail.com', 'DIU Hostel Management System');
+    $mail->setFrom('unistayhallportal@gmail.com', 'UniStay Portal');
     $mail->addAddress($email, $name);
 
     $mail->isHTML(true);
-    $mail->Subject = 'Your New Verification OTP - DIU Hostel Management System';
+    $mail->Subject = 'Your New Verification OTP - UniStay Portal';
 
     $mail->Body = "
         <div style='font-family: Arial, sans-serif; padding: 20px;'>
-            <h2 style='color:#004d40;'>DIU Hostel Management System</h2>
+            <h2 style='color:#004d40;'>UniStay Portal</h2>
             <p>Hello <strong>" . htmlspecialchars($name) . "</strong>,</p>
             <p>You requested a new verification code.</p>
             <p>Your new OTP is:</p>

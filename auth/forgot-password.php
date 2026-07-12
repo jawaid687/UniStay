@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $mail->SMTPAuth   = true;
 
                 // Gmail account
-                $mail->Username   = 'jawaidhossain5@gmail.com';
+                $mail->Username   = 'unistayhallportal@gmail.com';
 
                 // Use NEW 16-character Gmail App Password here, no spaces
                 $mail->Password   = 'dtahbiwbifvmtugk';
@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $mail->CharSet = 'UTF-8';
 
-                $mail->setFrom('jawaidhossain5@gmail.com', 'UniStay');
+                $mail->setFrom('unistayhallportal@gmail.com', 'UniStay');
                 $mail->addAddress($email, $user['name']);
 
                 $mail->isHTML(true);

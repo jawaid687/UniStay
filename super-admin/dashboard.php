@@ -37,7 +37,7 @@ $admin_name = isset($_SESSION['name']) ? $_SESSION['name'] : 'Super Admin';
 
 <head>
     <meta charset="UTF-8">
-    <title>Super Admin Dashboard - DIU Hostel Management System</title>
+    <title>Super Admin Dashboard - UniStay Hall Portal</title>
 
     <style>
         body {
@@ -260,7 +260,7 @@ $admin_name = isset($_SESSION['name']) ? $_SESSION['name'] : 'Super Admin';
         <h3>Welcome, <?php echo htmlspecialchars($admin_name); ?></h3>
 
         <div class="info-box">
-            <strong>DIU Hostel Management System</strong><br>
+            <strong>UniStay Hall Portal</strong><br>
             From this Super Admin Portal, you can approve users, monitor accounts, and access the Admin Panel.
         </div>
 

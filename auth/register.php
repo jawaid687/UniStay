@@ -55,20 +55,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     $mail->Host       = 'smtp.gmail.com';
                     $mail->SMTPAuth   = true;
 
-                    $mail->Username   = 'jawaidhossain5@gmail.com';
+                    $mail->Username   = 'unistayhallportal@gmail.com';
                     $mail->Password   = 'dtahbiwbifvmtugk';
 
                     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                     $mail->Port       = 587;
 
-                    $mail->setFrom('jawaidhossain5@gmail.com', 'DIU Hostel Management System');
+                    $mail->setFrom('unistayhallportal@gmail.com', 'UniStay Portal');
                     $mail->addAddress($email, $name);
 
                     $mail->isHTML(true);
-                    $mail->Subject = 'DIU Hostel Portal - Verification OTP';
+                    $mail->Subject = 'UniStay Portal - Verification OTP';
                     $mail->Body    = "
                         Hello <b>$name</b>,<br><br>
-                        Welcome to <b>DIU Hostel Management System</b>.<br>
+                        Welcome to <b>UniStay hall portal</b>.<br>
                         Your registration OTP is: <b style='font-size:18px;'>$otp</b><br><br>
                         This OTP is valid for 10 minutes.<br><br>
                         Thank you.
@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Register - DIU Hostel Management System</title>
+    <title>Register - UniStay Hall Portal</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <style>
@@ -308,7 +308,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="auth-container">
 
         <div class="auth-logo">
-            <h1>DIU Hostel Management System</h1>
+            <h1>UniStay Hall Portal</h1>
             <p>Create your hostel portal account to access student, staff, or admin services.</p>
         </div>
 

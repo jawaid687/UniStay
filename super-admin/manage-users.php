@@ -204,7 +204,7 @@ $institutional_id = isset($_SESSION['institutional_id']) ? $_SESSION['institutio
 
 <head>
     <meta charset="UTF-8">
-    <title>Manage Users - DIU Hostel Management System</title>
+    <title>Manage Users - UniStay Hall Portal</title>
 
     <style>
         body {

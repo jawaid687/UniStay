@@ -481,7 +481,7 @@ $institutional_id = isset($_SESSION['institutional_id']) ? $_SESSION['institutio
         </div>
 
         <div class="info-box">
-            <strong>DIU Hostel Management System</strong><br>
+            <strong>Hostel Management System</strong><br>
             Logged in as: <strong><?php echo htmlspecialchars($name); ?></strong>
             |
             ID: <strong><?php echo htmlspecialchars($institutional_id); ?></strong>

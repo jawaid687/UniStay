@@ -834,7 +834,7 @@ body.dark-mode .home-page .hero .btn-secondary:hover {
 
     <footer class="footer">
         <p><strong>UniStay</strong> - Hostel Management Portal</p>
-        <p>Project by Jawaid | Daffodil International University</p>
+        <p>Developed for DBMS Project | Daffodil International University</p>
     </footer>
 
 </div>

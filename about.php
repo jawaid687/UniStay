@@ -810,7 +810,7 @@ function h($value) {
                         <div class="ut-avatar-small">MS</div>
                         <div>
                             <h3>Meherun Nesa Shraboni</h3>
-                            <span>Notice, Bus Information & Updates</span>
+                            <span>Notice & Updates</span>
                         </div>
                     </div>
 
@@ -821,7 +821,6 @@ function h($value) {
 
                     <ul>
                         <li>Works on notice board planning for hostel announcements.</li>
-                        <li>Focuses on bus information and transport-related updates.</li>
                         <li>Plans how students can view important hostel notices from the portal.</li>
                         <li>Helps organize rules, deadlines, emergency notices, and events.</li>
                         <li>Supports authority-to-student update flow.</li>
@@ -955,7 +954,7 @@ function h($value) {
 
     <footer class="ut-footer">
         <p><strong>UniStay</strong> - Hostel Management Portal</p>
-        <p>Project by Jawaid | Daffodil International University</p>
+        <p>Developed for DBMS Project | Daffodil International University</p>
     </footer>
 
 </div>

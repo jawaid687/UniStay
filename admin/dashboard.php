@@ -297,18 +297,17 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'unknown';
             <div class="module-card">
                 <h3>Room Management</h3>
                 <p>
-                    Add, update, view, and manage hostel rooms, room capacity,
-                    availability, and room status.
+                <p>
+                    View hostel rooms, hall-wise room list, capacity, available seats, occupied seats, and update room status.
                 </p>
-                <a href="../rooms/index.php">Manage Rooms</a>
+                </p>
+                <a href="rooms.php" class="btn btn-green">Manage Rooms</a>
             </div>
 
             <div class="module-card">
                 <h3>Student Records</h3>
                 <p>
-                    View, add, manage, and delete student hostel records.
-                    Deleted student records will move to the Admin Recycle Bin.
-                </p>
+                   View student hostel records, room assignment details, compatibility information, and request history.
                 <a href="student-records.php">Manage Students</a>
             </div>
 
@@ -345,6 +344,11 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'unknown';
                     Approve, disable, update, or delete staff and student users only.
                 </p>
                 <a href="manage-users.php">Manage Users</a>
+            </div>
+            <div class="module-card">
+                <h3>Student Requests</h3>
+                <p>Open all student request modules such as room change, leave, and late entry applications.</p>
+                <a href="student-requests.php">Open Student Requests</a>
             </div>
 
         </div>

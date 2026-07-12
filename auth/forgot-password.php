@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $mail->Username   = 'unistayhallportal@gmail.com';
 
                 // Use NEW 16-character Gmail App Password here, no spaces
-                $mail->Password   = 'dtahbiwbifvmtugk';
+                $mail->Password   = 'sovuhuibsfnklsip';
 
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                 $mail->Port       = 587;

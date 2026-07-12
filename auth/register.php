@@ -17,15 +17,17 @@ $institutional_id = '';
 $role = '';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $name = mysqli_real_escape_string($conn, trim($_POST['name'] ?? ''));
-    $email = mysqli_real_escape_string($conn, trim($_POST['email'] ?? ''));
-    $institutional_id = mysqli_real_escape_string($conn, trim($_POST['institutional_id'] ?? ''));
-    $role = mysqli_real_escape_string($conn, $_POST['role'] ?? '');
+    $name = trim($_POST['name'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $institutional_id = trim($_POST['institutional_id'] ?? '');
+    $role = trim($_POST['role'] ?? '');
     $password = $_POST['password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
 
     if (empty($name) || empty($email) || empty($institutional_id) || empty($role) || empty($password) || empty($confirm_password)) {
         $error = "All fields are required.";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "Please enter a valid email address.";
     } elseif ($password !== $confirm_password) {
         $error = "Passwords do not match.";
     } elseif (strlen($password) < 6) {
@@ -33,57 +35,96 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } elseif (!in_array($role, ['student', 'staff', 'admin'])) {
         $error = "Invalid role selected.";
     } else {
-        $check_query = "SELECT id FROM users WHERE email = '$email' OR institutional_id = '$institutional_id'";
-        $check_result = mysqli_query($conn, $check_query);
+        $check_stmt = mysqli_prepare(
+            $conn,
+            "SELECT id FROM users WHERE email = ? OR institutional_id = ? LIMIT 1"
+        );
+
+        mysqli_stmt_bind_param($check_stmt, "ss", $email, $institutional_id);
+        mysqli_stmt_execute($check_stmt);
+        $check_result = mysqli_stmt_get_result($check_stmt);
 
         if (mysqli_num_rows($check_result) > 0) {
             $error = "Email or Institutional ID is already registered.";
+            mysqli_stmt_close($check_stmt);
         } else {
-            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            mysqli_stmt_close($check_stmt);
 
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             $otp = rand(100000, 999999);
             $otp_expiry = date("Y-m-d H:i:s", strtotime("+10 minutes"));
 
-            $insert_query = "INSERT INTO users (name, email, institutional_id, role, password, otp_code, otp_expiry) 
-                             VALUES ('$name', '$email', '$institutional_id', '$role', '$hashed_password', '$otp', '$otp_expiry')";
+            mysqli_begin_transaction($conn);
 
-            if (mysqli_query($conn, $insert_query)) {
+            try {
+                $insert_stmt = mysqli_prepare(
+                    $conn,
+                    "INSERT INTO users 
+                    (name, email, institutional_id, role, password, otp_code, otp_expiry)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)"
+                );
+
+                mysqli_stmt_bind_param(
+                    $insert_stmt,
+                    "sssssss",
+                    $name,
+                    $email,
+                    $institutional_id,
+                    $role,
+                    $hashed_password,
+                    $otp,
+                    $otp_expiry
+                );
+
+                if (!mysqli_stmt_execute($insert_stmt)) {
+                    throw new Exception("Database insert failed.");
+                }
+
+                mysqli_stmt_close($insert_stmt);
+
                 $mail = new PHPMailer(true);
 
-                try {
-                    $mail->isSMTP();
-                    $mail->Host       = 'smtp.gmail.com';
-                    $mail->SMTPAuth   = true;
+                $mail->isSMTP();
+                $mail->Host       = 'smtp.gmail.com';
+                $mail->SMTPAuth   = true;
 
-                    $mail->Username   = 'unistayhallportal@gmail.com';
-                    $mail->Password   = 'dtahbiwbifvmtugk';
+                $mail->Username   = 'unistayhallportal@gmail.com';
 
-                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-                    $mail->Port       = 587;
+                /*
+                    Paste your Gmail App Password below.
+                    Do not use your normal Gmail password.
+                */
+                $mail->Password   = 'sovuhuibsfnklsip';
 
-                    $mail->setFrom('unistayhallportal@gmail.com', 'UniStay Portal');
-                    $mail->addAddress($email, $name);
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                $mail->Port       = 587;
 
-                    $mail->isHTML(true);
-                    $mail->Subject = 'UniStay Portal - Verification OTP';
-                    $mail->Body    = "
-                        Hello <b>$name</b>,<br><br>
-                        Welcome to <b>UniStay hall portal</b>.<br>
-                        Your registration OTP is: <b style='font-size:18px;'>$otp</b><br><br>
-                        This OTP is valid for 10 minutes.<br><br>
-                        Thank you.
-                    ";
+                $mail->setFrom('unistayhallportal@gmail.com', 'UniStay Portal');
+                $mail->addAddress($email, $name);
 
-                    $mail->send();
+                $safe_name = htmlspecialchars($name, ENT_QUOTES, 'UTF-8');
 
-                    header("Location: verify-otp.php?email=" . urlencode($email));
-                    exit();
+                $mail->isHTML(true);
+                $mail->Subject = 'UniStay Portal - Verification OTP';
+                $mail->Body    = "
+                    Hello <b>{$safe_name}</b>,<br><br>
+                    Welcome to <b>UniStay Hall Portal</b>.<br>
+                    Your registration OTP is: <b style='font-size:18px;'>{$otp}</b><br><br>
+                    This OTP is valid for 10 minutes.<br><br>
+                    Thank you.
+                ";
 
-                } catch (Exception $e) {
-                    $error = "Registration successful, but OTP could not be sent. Error: " . $mail->ErrorInfo;
-                }
-            } else {
-                $error = "Something went wrong. Please try again.";
+                $mail->send();
+
+                mysqli_commit($conn);
+
+                header("Location: verify-otp.php?email=" . urlencode($email));
+                exit();
+
+            } catch (Exception $e) {
+                mysqli_rollback($conn);
+
+                $error = "OTP could not be sent. Registration was not completed. Please check your email settings and try again.";
             }
         }
     }
@@ -252,7 +293,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             font-size: 14px;
         }
 
-        /* Dark mode fix for register page */
         body.dark-mode .auth-container {
             background: #111827 !important;
             color: #e5e7eb !important;
@@ -403,7 +443,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </div>
 
 <div class="site-footer">
-    Project by <strong>Jawaid</strong> | Daffodil International University
+    Developed by <strong>Jawaid Hossain</strong> | Daffodil International University
 </div>
 
 <script src="/UniStay/assets/js/theme.js"></script>

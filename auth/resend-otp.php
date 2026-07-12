@@ -56,7 +56,7 @@ try {
     $mail->Username   = 'unistayhallportal@gmail.com';
 
     // Put your NEW Gmail App Password here
-    $mail->Password   = 'dtahbiwbifvmtugk';
+    $mail->Password   = 'sovuhuibsfnklsip';
 
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port       = 587;

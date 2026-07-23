@@ -1071,6 +1071,12 @@ $is_resident = (
                     </div>
 
                     <div class="portal-card">
+                      <h3>My Complaint Status</h3>
+                      <p>Track your submitted maintenance requests and check their current status.</p>
+                      <a href="complaint_status.php" class="btn btn-green">View Status</a>
+                    </div>
+                    
+                    <div class="portal-card">
                         <h3>Hostel Payment</h3>
                         <p>View hostel fee and payment information.</p>
                         <a href="payment.php" class="btn btn-green">View Payment</a>

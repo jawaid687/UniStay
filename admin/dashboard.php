@@ -326,7 +326,7 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'unknown';
                     Monitor student maintenance complaints and service requests,
                     then assign or update their progress.
                 </p>
-                <a href="../maintenance/index.php">View Requests</a>
+                <a href="../admin/admin_complaint_panel.php">View Requests</a>
             </div>
 
             <div class="module-card">

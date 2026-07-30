@@ -358,77 +358,127 @@ try {
 
         <div class="request-grid">
             
-            <!-- Assigned Complaints & Repairs -->
-            <div class="request-card card-green clickable-card" onclick="window.location.href='assigned-complaints.php'">
-                <h3>Assigned Complaints</h3>
+           <div class="request-grid">
 
-                <?php if ($pending_complaints > 0): ?>
-                    <span class="badge"><?php echo $pending_complaints; ?> Active Tickets</span>
-                <?php else: ?>
-                    <span class="badge">0 Active Tickets</span>
-                <?php endif; ?>
 
-                <p>
-                    Resolve maintenance requests and repairs assigned to you by the hostel administration.
-                </p>
+          <!-- My Profile -->
+    <div class="request-card card-purple clickable-card" onclick="window.location.href='profile.php'">
+        <h3>My Profile</h3>
 
-                <a href="assigned-complaints.php" onclick="event.stopPropagation();">
-                    Open Tasks & Repairs
-                </a>
-            </div>
+        <span class="badge">Account</span>
 
-            <!-- Cleaning & Floor Schedules -->
-            <div class="request-card card-blue clickable-card" onclick="window.location.href='staff-tasks.php'">
-                <h3>My Daily Tasks</h3>
+        <p>
+            View and manage your personal information and staff details.
+        </p>
 
-                <?php if ($pending_tasks > 0): ?>
-                    <span class="badge"><?php echo $pending_tasks; ?> Pending Tasks</span>
-                <?php else: ?>
-                    <span class="badge">All Completed</span>
-                <?php endif; ?>
-
-                <p>
-                    Track your daily assigned cleaning areas, routines, and floor sanitation schedules.
-                </p>
-
-                <a href="staff-tasks.php" onclick="event.stopPropagation();">
-                    Open Shift Tasks
-                </a>
-            </div>
-
-            <!-- Supply & Inventory Requests -->
-            <div class="request-card card-purple clickable-card" onclick="window.location.href='supply-requests.php'">
-                <h3>Inventory Requests</h3>
-
-                <span class="badge">Supplies & Tools</span>
-
-                <p>
-                    Request replacement components, cleaning chemicals, or utility assets from management.
-                </p>
-
-                <a href="supply-requests.php" onclick="event.stopPropagation();">
-                    Request Supplies
-                </a>
-            </div>
-
-            <!-- Shift Details & Roster -->
-            <div class="request-card card-gray clickable-card" onclick="window.location.href='duty-roster.php'">
-                <h3>Shift & Duty Roster</h3>
-
-                <span class="badge">Schedule</span>
-
-                <p>
-                    View your weekly shift timing, assigned wings, holiday calendars, and shift records.
-                </p>
-
-                <a href="duty-roster.php" onclick="event.stopPropagation();">
-                    View Roster
-                </a>
-            </div>
-
-        </div>
-
+        <a href="profile.php" onclick="event.stopPropagation();">
+            Open Profile
+        </a>
     </div>
+
+
+
+
+
+    <!-- Assigned Complaints -->
+    <div class="request-card card-green clickable-card" onclick="window.location.href='assigned-complaints.php'">
+        <h3>Assigned Complaints</h3>
+        <span class="badge"><?php echo $pending_complaints; ?> Active Tickets</span>
+
+        <p>
+            View and solve complaints assigned by hostel administration.
+        </p>
+
+        <a href="assigned-complaints.php" onclick="event.stopPropagation();">
+            Open Complaints
+        </a>
+    </div>
+
+
+    <!-- Availability -->
+    <div class="request-card card-blue clickable-card" onclick="window.location.href='availability.php'">
+        <h3>Availability</h3>
+
+        <span class="badge">Status</span>
+
+        <p>
+            Update your available time and working status.
+        </p>
+
+        <a href="availability.php" onclick="event.stopPropagation();">
+            Update Availability
+        </a>
+    </div>
+
+
+
+
+    <!-- Leave Application -->
+    <div class="request-card card-purple clickable-card" onclick="window.location.href='leave-application.php'">
+        <h3>Leave Application</h3>
+
+        <span class="badge">Request</span>
+
+        <p>
+            Apply for leave and check your leave approval status.
+        </p>
+
+        <a href="leave-application.php" onclick="event.stopPropagation();">
+            Apply Leave
+        </a>
+    </div>
+
+
+    <!-- Performance -->
+    <div class="request-card card-green clickable-card" onclick="window.location.href='performance.php'">
+        <h3>Performance</h3>
+
+        <span class="badge">Report</span>
+
+        <p>
+            Check your duty performance and completed work records.
+        </p>
+
+        <a href="performance.php" onclick="event.stopPropagation();">
+            View Performance
+        </a>
+    </div>
+
+
+    <!-- Messages -->
+    <div class="request-card card-blue clickable-card" onclick="window.location.href='messages.php'">
+        <h3>Messages</h3>
+
+        <span class="badge">Inbox</span>
+
+        <p>
+            Communicate with administration and receive updates.
+        </p>
+
+        <a href="messages.php" onclick="event.stopPropagation();">
+            Open Messages
+        </a>
+    </div>
+
+
+    <!-- Floor Schedule NEW -->
+    <div class="request-card card-gray clickable-card" onclick="window.location.href='floor-schedule.php'">
+        <h3>Floor Schedule</h3>
+
+        <span class="badge">Floor Duty</span>
+
+        <p>
+            View assigned floors, cleaning schedules, inspection time,
+            and daily floor maintenance duties.
+        </p>
+
+        <a href="floor-schedule.php" onclick="event.stopPropagation();">
+            View Schedule
+        </a>
+    </div>
+
+
+</div>
 
     <script src="../assets/js/theme.js"></script>
 </body>

@@ -19,7 +19,7 @@ if ($is_logged_in) {
         $dashboard_link = 'student/dashboard.php';
         $dashboard_text = 'Student Dashboard';
     } elseif ($role === 'staff') {
-        $dashboard_link = 'stuff/dashboard.php';
+        $dashboard_link = 'staff/dashboard.php';
         $dashboard_text = 'Staff Dashboard';
     }
 }

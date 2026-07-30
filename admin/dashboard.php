@@ -351,6 +351,19 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'unknown';
                 <a href="student-requests.php">Open Student Requests</a>
             </div>
 
+<div class="module-card">
+    <h3>staff_records</h3>
+    <p>
+
+Staff profile,Availability,Admin Notices,Leave Application for staff,Performance,Messages,Floor Schedule
+
+    </p>
+    <a href="view-staff-records.php">View Staff Records</a>
+    
+</div>
+
+
+            
         </div>
 
         <div class="note-box">
@@ -361,6 +374,9 @@ $role = isset($_SESSION['role']) ? $_SESSION['role'] : 'unknown';
             can restore them. Support messages submitted from the Support page will appear
             in the <strong>Support Messages</strong> module.
         </div>
+
+
+        
 
     </div>
 

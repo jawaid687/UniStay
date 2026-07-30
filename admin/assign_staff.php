@@ -16,86 +16,178 @@ if (!isset($_GET['id'])) {
 
 $complaint_id = intval($_GET['id']);
 
-if (isset($_POST['assign'])) {
+
+if(isset($_POST['assign'])){
+
 
     $staff_id = intval($_POST['staff_id']);
 
-    /* Get Cluster ID */
 
-$clusterQuery = mysqli_query($conn,
-"SELECT cluster_id
-FROM complaints
-WHERE complaint_id='$complaint_id'");
+    // Check staff exists in users table
 
-$cluster = mysqli_fetch_assoc($clusterQuery);
+    $check = mysqli_prepare($conn,"
+        SELECT id 
+        FROM users
+        WHERE id=? 
+        AND role='staff'
+    ");
 
-/* If complaint belongs to a cluster */
-
-if(!empty($cluster['cluster_id']))
-{
-    $stmt = mysqli_prepare(
-        $conn,
-        "UPDATE complaints
-         SET assigned_staff_id=?
-         WHERE cluster_id=?"
-    );
 
     mysqli_stmt_bind_param(
-        $stmt,
-        "is",
-        $staff_id,
-        $cluster['cluster_id']
-    );
-}
-else
-{
-    $stmt = mysqli_prepare(
-        $conn,
-        "UPDATE complaints
-         SET assigned_staff_id=?
-         WHERE complaint_id=?"
+        $check,
+        "i",
+        $staff_id
     );
 
-    mysqli_stmt_bind_param(
-        $stmt,
-        "ii",
-        $staff_id,
-        $complaint_id
-    );
-}
 
-    if(mysqli_stmt_execute($stmt))
-    {
-        mysqli_query($conn,"
-        INSERT INTO complaint_timeline
-        (complaint_id,status_change,note,changed_at)
+    mysqli_stmt_execute($check);
 
-        VALUES
 
-        (
-        '$complaint_id',
-        'Assigned',
-        'Complaint assigned to staff',
-        NOW()
-        )");
+    $result = mysqli_stmt_get_result($check);
 
-        $success="Staff assigned successfully.";
-    }
-    else
-    {
-        $error="Assignment failed.";
+
+
+    if(mysqli_num_rows($result)==0){
+
+        $error="Invalid staff selected.";
+
     }
 
-    mysqli_stmt_close($stmt);
+    else{
+
+
+        // Get cluster id
+
+        $clusterQuery=mysqli_query($conn,"
+            SELECT cluster_id
+            FROM complaints
+            WHERE complaint_id='$complaint_id'
+        ");
+
+
+        $cluster=mysqli_fetch_assoc($clusterQuery);
+
+
+
+        if(!empty($cluster['cluster_id'])){
+
+
+            $stmt=mysqli_prepare($conn,"
+
+                UPDATE complaints
+
+                SET 
+                assigned_staff_id=?,
+                status='In Progress'
+
+                WHERE cluster_id=?
+
+            ");
+
+
+            mysqli_stmt_bind_param(
+                $stmt,
+                "is",
+                $staff_id,
+                $cluster['cluster_id']
+            );
+
+
+        }
+        else{
+
+
+            $stmt=mysqli_prepare($conn,"
+
+                UPDATE complaints
+
+                SET 
+                assigned_staff_id=?,
+                status='In Progress'
+
+                WHERE complaint_id=?
+
+            ");
+
+
+            mysqli_stmt_bind_param(
+                $stmt,
+                "ii",
+                $staff_id,
+                $complaint_id
+            );
+
+        }
+
+
+
+        if(mysqli_stmt_execute($stmt)){
+
+
+            mysqli_query($conn,"
+
+            INSERT INTO complaint_timeline
+            (
+            complaint_id,
+            status_change,
+            note,
+            changed_at
+            )
+
+            VALUES
+
+            (
+            '$complaint_id',
+            'Assigned',
+            'Complaint assigned to staff',
+            NOW()
+            )
+
+            ");
+
+
+            $success="Staff assigned successfully.";
+
+
+        }
+        else{
+
+
+            $error="Assignment failed: ".mysqli_error($conn);
+
+
+        }
+
+
+        mysqli_stmt_close($stmt);
+
+    }
+
+
 }
 
-/* Load Staff */
 
-$staff = mysqli_query($conn,"
-SELECT id, name
+
+
+// Load Staff
+
+$staff=mysqli_query($conn,"
+
+SELECT 
+
+id,
+name
+
 FROM users
+
 WHERE role='staff'
+
+AND is_deleted=0
+
+ORDER BY name ASC
+
 ");
+
 ?>
 
 <!DOCTYPE html>
